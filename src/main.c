@@ -27,33 +27,16 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <asf.h>
+#include <cph.h>
 
-void configure_stdio(void);
 void configure_spi(void);
 
-struct usart_module usart_instance;
 
 #define SPI_BUF_LENGTH 20
 volatile uint8_t spi_buffer[SPI_BUF_LENGTH];
 struct spi_module spi_master_instance;
 struct spi_slave_inst spi_slave;
 
-void configure_stdio(void) {
-
-	struct usart_config config_usart;
-	usart_get_config_defaults(&config_usart);
-
-	config_usart.baudrate = STDIO_BAUD;
-	config_usart.mux_setting = STDIO_MUX;
-	config_usart.pinmux_pad0 = STDIO_PAD0;
-	config_usart.pinmux_pad1 = STDIO_PAD1;
-	config_usart.pinmux_pad2 = STDIO_PAD2;
-	config_usart.pinmux_pad3 = STDIO_PAD3;
-
-	stdio_serial_init(&usart_instance, STDIO_HW, &config_usart);
-	usart_enable(&usart_instance);
-}
 
 void configure_spi(void) {
 	struct spi_config config_spi_master;
@@ -79,48 +62,26 @@ void configure_spi(void) {
 
 }
 
-volatile uint32_t g_ul_ms_ticks = 0;
-void SysTick_Handler(void) {
-	g_ul_ms_ticks++;
-}
-static void mdelay(uint32_t ticks) {
-	uint32_t current;
-	current = g_ul_ms_ticks;
-	while ((g_ul_ms_ticks - current) < ticks)
-		;
-}
-
 int main(void) {
+
 	system_init();
 
-	configure_stdio();
+	cph_millis_init();
 
-	configure_spi();
+	cph_stdio_init();
 
 	system_interrupt_enable_global();
 
-	SysTick_Config(system_cpu_clock_get_hz() / 1000);
+#ifdef MAIN_TEST
+	main_test();
+#else
 
 	while (1) {
-
-		// Device ID
-		spi_buffer[0] = 0x00;
-		spi_buffer[1] = 0x00;
-		spi_buffer[2] = 0x00;
-		spi_buffer[3] = 0x00;
-		spi_buffer[4] = 0x00;
-
-		spi_select_slave(&spi_master_instance, &spi_slave, true);
-
-		spi_write_buffer_wait(&spi_master_instance, (const uint8_t *) spi_buffer, 1);
-		spi_read_buffer_wait(&spi_master_instance, (uint8_t *) &spi_buffer[1], 4, 0xff);
-
-		spi_select_slave(&spi_master_instance, &spi_slave, false);
-
-		printf(":%02X%02X%02X%02X%02X\r\n", spi_buffer[0], spi_buffer[1], spi_buffer[2], spi_buffer[3], spi_buffer[4]);
-
-		mdelay(500);
+		printf("HELLO\r\n");
 		port_pin_toggle_output_level(LED_PIN);
+		cph_millis_delay(500);
 	}
+
+#endif
 
 }
