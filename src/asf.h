@@ -59,6 +59,10 @@
 // From module: Common build items for user board support templates
 #include <user_board.h>
 
+// From module: EXTINT - External Interrupt (Callback APIs)
+#include <extint.h>
+#include <extint_callback.h>
+
 // From module: Generic board support
 #include <board.h>
 
