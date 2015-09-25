@@ -122,3 +122,64 @@ void reset_DW1000(void) {
 	Sleep(1);
 }
 
+decaIrqStatus_t decamutexon(void) {
+	decaIrqStatus_t bitstatus = 0x00;
+
+	bitstatus = (extint_chan_is_detected(DW_IRQ_LINE) ? 0xff : 0x00);
+
+	if (bitstatus != 0x00) {
+		port_DisableEXT_IRQ();
+	}
+
+	return bitstatus;
+}
+
+void decamutexoff(decaIrqStatus_t s) {
+
+	if (s != 0x00) {
+		port_EnableEXT_IRQ();
+	}
+}
+
+
+
+int writetospi_serial(uint16_t headerLength, const uint8_t *headerBuffer, uint32_t bodylength, const uint8_t *bodyBuffer) {
+	status_code_t result = STATUS_OK;
+
+	port_SPIx_set_chip_select();
+
+	if ((result = spi_write_buffer_wait(&spi_master_instance, headerBuffer, headerLength)) == STATUS_OK) {
+		result = spi_write_buffer_wait(&spi_master_instance, bodyBuffer, bodylength);
+	}
+
+	port_SPIx_clear_chip_select();
+
+	if (result != STATUS_OK) {
+		printf("writetospi_serial timeout\r\n");
+		for (;;) {
+		}
+	}
+
+	return result;
+}
+
+int readfromspi_serial(uint16_t headerLength, const uint8_t *headerBuffer, uint32_t readlength, uint8_t *readBuffer) {
+	status_code_t result = STATUS_OK;
+
+	port_SPIx_set_chip_select();
+
+	if ((result = spi_write_buffer_wait(&spi_master_instance, headerBuffer, headerLength)) == STATUS_OK) {
+		result = spi_read_buffer_wait(&spi_master_instance, readBuffer, readlength, 0xff);
+	}
+
+	port_SPIx_clear_chip_select();
+
+	if (result != STATUS_OK) {
+		printf("readfromspi_serial timeout\r\n");
+		for (;;) {
+		}
+	}
+
+	return result;
+}
+

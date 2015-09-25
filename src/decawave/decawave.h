@@ -14,5 +14,6 @@
 #include "deca_device_api.h"
 #include "instance.h"
 
+void decawave_run(void);
 
 #endif /* INC_DECAWAVE_H_ */

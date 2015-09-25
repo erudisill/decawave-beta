@@ -29,6 +29,8 @@
  */
 #include <cph.h>
 
+#include <decawave.h>
+
 int main(void) {
 
 	system_init();
@@ -42,11 +44,13 @@ int main(void) {
 	main_test();
 #else
 
-	while (1) {
-		printf("HELLO\r\n");
-		port_pin_toggle_output_level(LED_PIN);
-		cph_millis_delay(500);
-	}
+	decawave_run();
+
+//	while (1) {
+//		printf("HELLO\r\n");
+//		port_pin_toggle_output_level(LED_PIN);
+//		cph_millis_delay(500);
+//	}
 
 #endif
 

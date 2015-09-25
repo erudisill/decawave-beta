@@ -9,6 +9,7 @@
 #define SRC_DECAWAVE_DECA_PORT_H_
 
 #include <cph.h>
+#include "deca_device_api.h"
 
 #define Sleep(x)			cph_millis_delay(x)
 #define deca_millis()		cph_get_millis()
@@ -50,6 +51,15 @@ void reset_DW1000(void);
 
 extern void process_deca_irq(void);
 extern void process_dwRSTn_irq(void);
+
+decaIrqStatus_t decamutexon(void);
+void decamutexoff(decaIrqStatus_t s);
+
+
+int writetospi_serial(uint16_t headerLength, const uint8_t *headerBuffer, uint32_t bodylength, const uint8_t *bodyBuffer);
+int readfromspi_serial(uint16_t headerLength, const uint8_t *headerBuffer, uint32_t readlength, uint8_t *readBuffer);
+#define writetospi		writetospi_serial
+#define readfromspi		readfromspi_serial
 
 
 #endif /* SRC_DECAWAVE_DECA_PORT_H_ */
