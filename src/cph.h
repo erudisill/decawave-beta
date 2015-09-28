@@ -10,7 +10,7 @@
 
 #include <asf.h>
 
-#define MAIN_TEST
+//#define MAIN_TEST
 
 
 #include <cph_millis.h>

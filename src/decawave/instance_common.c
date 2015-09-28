@@ -398,7 +398,7 @@ int instance_init(void)
 	//printf("Vbat = %d (0x%02x) %1.2fV\tVtemp = %d  (0x%02x) %2.2fC\n",temp&0xFF,temp&0xFF, ((0.0057 * (temp&0xFF)) + 2.3), (temp>>8)&0xFF,(temp>>8)&0xFF, ((1.13 * ((temp>>8)&0xFF)) - 113.0));
 
     //this is platform dependant - only program if DW EVK/EVB
-    dwt_setleds(3) ; //configure the GPIOs which control the leds on EVBs
+//    dwt_setleds(3) ; //configure the GPIOs which control the leds on EVBs		*** ER: COMMENTED ***
 
     if (DWT_SUCCESS != result)
     {
