@@ -10,7 +10,11 @@
 
 #include <asf.h>
 
+#define MAIN_TEST
+
+
 #include <cph_millis.h>
 #include <cph_stdio.h>
+
 
 #endif /* SRC_CPH_H_ */

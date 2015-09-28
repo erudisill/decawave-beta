@@ -5,10 +5,10 @@
  *      Author: ericrudisill
  */
 
+#include <cph.h>
+
 
 #ifdef MAIN_TEST
-
-#include <cph.h>
 
 static void configure_spi(void);
 
@@ -44,7 +44,28 @@ static void configure_spi(void) {
 
 }
 
+void extint_handle(void)
+{
+	bool status = port_pin_get_input_level(PIN_PA00);
+	port_pin_set_output_level(LED_PIN, !status);
+}
 
+void extint_init(void) {
+
+	struct extint_chan_conf config_chan;
+	extint_chan_get_config_defaults(&config_chan);
+
+	config_chan.gpio_pin = PIN_PA00;
+	config_chan.gpio_pin_mux = PIN_PA00A_EIC_EXTINT0;
+	config_chan.gpio_pin_pull = EXTINT_PULL_NONE;
+	config_chan.detection_criteria = EXTINT_DETECT_BOTH;
+
+	extint_chan_set_config(0, &config_chan);
+
+	extint_register_callback(extint_handle, 0, EXTINT_CALLBACK_TYPE_DETECT);
+
+	extint_chan_enable_callback(0, EXTINT_CALLBACK_TYPE_DETECT);
+}
 
 void main_test(void) {
 	system_init();
@@ -53,30 +74,39 @@ void main_test(void) {
 
 	cph_stdio_init();
 
-	configure_spi();
+//	configure_spi();
+
+	extint_init();
 
 	system_interrupt_enable_global();
 
+	port_pin_set_output_level(LED_PIN, true);
+
+	uint8_t counter = 0;
+
+	printf("\r\n\r\nSTART\r\n");
+
 	while (1) {
 
-		// Device ID
-		spi_buffer[0] = 0x00;
-		spi_buffer[1] = 0x00;
-		spi_buffer[2] = 0x00;
-		spi_buffer[3] = 0x00;
-		spi_buffer[4] = 0x00;
+//		// Device ID
+//		spi_buffer[0] = 0x00;
+//		spi_buffer[1] = 0x00;
+//		spi_buffer[2] = 0x00;
+//		spi_buffer[3] = 0x00;
+//		spi_buffer[4] = 0x00;
+//
+//		spi_select_slave(&spi_master_instance, &spi_slave, true);
+//
+//		spi_write_buffer_wait(&spi_master_instance, (const uint8_t *) spi_buffer, 1);
+//		spi_read_buffer_wait(&spi_master_instance, (uint8_t *) &spi_buffer[1], 4, 0xff);
+//
+//		spi_select_slave(&spi_master_instance, &spi_slave, false);
 
-		spi_select_slave(&spi_master_instance, &spi_slave, true);
-
-		spi_write_buffer_wait(&spi_master_instance, (const uint8_t *) spi_buffer, 1);
-		spi_read_buffer_wait(&spi_master_instance, (uint8_t *) &spi_buffer[1], 4, 0xff);
-
-		spi_select_slave(&spi_master_instance, &spi_slave, false);
-
-		printf(":%02X%02X%02X%02X%02X\r\n", spi_buffer[0], spi_buffer[1], spi_buffer[2], spi_buffer[3], spi_buffer[4]);
+		printf(":%02X%02X%02X%02X%02X %02X\r\n", spi_buffer[0], spi_buffer[1], spi_buffer[2], spi_buffer[3], spi_buffer[4], counter);
 
 		cph_millis_delay(500);
-		port_pin_toggle_output_level(LED_PIN);
+		counter++;
+//		port_pin_toggle_output_level(LED_PIN);
 	}
 
 }

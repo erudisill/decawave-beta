@@ -207,12 +207,6 @@ uint32 inittestapplication(void) {
 		port_SPIx_set_chip_select();  //CS high
 		Sleep(7);
 
-//		printf("asleep...wakeup!\r\n");
-//		deca_pin_high(DW_WAKEUP_PIO_IDX);
-//		Sleep(1);
-//		deca_pin_low(DW_WAKEUP_PIO_IDX);
-//		Sleep(7);
-
 		devID = instancereaddeviceid();
 		printf("devID %08X\r\n", devID);
 		// SPI not working or Unsupported Device ID
@@ -471,10 +465,11 @@ void decawave_run(void) {
 				if (instanceanchorwaiting()) {
 					toggle += 2;
 
-					if (toggle > 300000) {
+					if (toggle > (300000 / 4)) {
 						if (toggle & 0x1) {
 							toggle = 0;
 							printf("AWAITING POLL\r\n");
+							print_status();
 						} else {
 							toggle = 1;
 #if (DR_DISCOVERY == 1)

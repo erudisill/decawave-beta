@@ -31,6 +31,18 @@
 
 #include <decawave.h>
 
+#ifdef MAIN_TEST
+
+extern void main_test(void);
+
+int main(void) {
+	main_test();
+
+}
+
+#else
+
+
 int main(void) {
 
 	system_init();
@@ -40,10 +52,6 @@ int main(void) {
 
 	system_interrupt_enable_global();
 
-#ifdef MAIN_TEST
-	main_test();
-#else
-
 	decawave_run();
 
 //	while (1) {
@@ -52,6 +60,6 @@ int main(void) {
 //		cph_millis_delay(500);
 //	}
 
-#endif
-
 }
+
+#endif
