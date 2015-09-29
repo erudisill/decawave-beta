@@ -308,19 +308,10 @@ uint32 inittestapplication(void) {
 	return 0;
 }
 
-//void process_deca_irq(uint32_t id, uint32_t mask) {
-//	printf("deca_irq\r\n");
-//	do {
-//		instance_process_irq(0);
-//	} while (port_CheckEXT_IRQ() == 1);
-//}
-
-static volatile uint8_t irq_set = 0;
-
 void process_deca_irq(void) {
-	deca_pin_toggle(LED_PIN);
-//	instance_process_irq(0);
-	irq_set = 0x01;
+	do {
+		instance_process_irq(0);
+	} while (port_CheckEXT_IRQ() == 1);
 }
 
 void process_dwRSTn_irq(void) {
@@ -407,21 +398,6 @@ void decawave_run(void) {
 
 	// main loop
 	while (1) {
-
-		//ERIC: Delay irq handling...will this work?
-		uint32_t bail = 0;
-		if (irq_set) {
-			do {
-				if (bail++ > 2000) {
-					printf("BAIL!\r\n");
-					Sleep(10);
-					for (;;) {
-					}
-				}
-				instance_process_irq(0);
-			} while (port_CheckEXT_IRQ() == 1);
-			irq_set = 0x00;
-		}
 
 		instance_run();
 
