@@ -34,9 +34,11 @@
 #ifdef MAIN_TEST
 
 extern void main_test(void);
+extern void blinky_test(void);
 
 int main(void) {
 	main_test();
+//	blinky_test();
 
 }
 
@@ -49,6 +51,9 @@ int main(void) {
 
 	cph_millis_init();
 	cph_stdio_init();
+
+	uint32_t f = system_gclk_gen_get_hz(0);
+	printf("CPU FREQ: %lu\r\n", f);
 
 	system_interrupt_enable_global();
 

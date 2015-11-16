@@ -373,9 +373,9 @@ int testapprun_s(instance_data_t *inst, int message)
                 setup_DW1000RSTnIRQ(1); //enable RSTn IRQ
 
                 printf("awake from state machine!!\r\n");
-        		port_SPIx_clear_chip_select();  //CS low
+        		port_SPIx_set_chip_select();  //CS low
         		Sleep(1);   //200 us to wake up then waits 5ms for DW1000 XTAL to stabilise
-        		port_SPIx_set_chip_select();  //CS high
+        		port_SPIx_clear_chip_select();  //CS high
         		Sleep(7);
 //        		deca_pin_high(DW_WAKEUP_PIO_IDX);
 //                Sleep(1);
@@ -387,9 +387,12 @@ int testapprun_s(instance_data_t *inst, int message)
 //                port_SPIx_set_chip_select();  //CS high
                 //Sleep(5);
 
+                printf("before dwIDLE loop\r\n");
+
                 //need to poll to check when the DW1000 is in IDLE, the CPLL interrupt is not reliable
                 while(instance_data[0].dwIDLE == 0); //wait for DW1000 to go to IDLE state RSTn pin to go high
 
+                printf("after dwIDLE loop\r\n");
 
                 setup_DW1000RSTnIRQ(0); //disable RSTn IRQ
                 //add ~ Sleep(80) to stabilise the XTAL

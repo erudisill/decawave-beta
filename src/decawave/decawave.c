@@ -9,12 +9,16 @@
 
 #define SOFTWARE_VER_STRING  "Version 0.01    "
 
-int is_tag = 0x00;
+
+int is_tag = 0x01;
+uint8_t eui64[] = { 0x02, 0x00, 0x00, 0x00, 0x00, 0x02, 0xCA, 0xDE };
+
+//int is_tag = 0x00;
+//uint8_t eui64[] = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x02, 0xCA, 0xDE };
+
 int use_fast2wr = 0x00;
 int use_long_blink_delay = 0x00;
 int use_dr_mode = 0x02;  // Mode 3
-//uint8_t eui64[] = { 0xDE, 0xCA, 0x02, 0x00, 0x00, 0x00, 0x00, 0x01 };
-uint8_t eui64[] = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x02, 0xCA, 0xDE };
 
 int instance_anchaddr = 0; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 = 0xDECA020000000003
 int instance_mode = ANCHOR;
@@ -220,6 +224,7 @@ uint32 inittestapplication(void) {
 	//reset the DW1000 by driving the RSTn line low
 	reset_DW1000();
 
+
 	result = instance_init();
 	if (0 > result)
 		return (-2); // Some failure has occurred
@@ -327,6 +332,7 @@ void decawave_run(void) {
 	double avg_result = 0;
 	uint8 dataseq1[40];
 	uint8 command = 0x0;
+	uint32 time_start = 0;
 
 	led_off(LED_ALL); //turn off all the LEDs
 
@@ -388,7 +394,8 @@ void decawave_run(void) {
 		if (use_fast2wr) {
 			printf("Fast Tag Ranging\r\n");
 		} else {
-			printf("TAG BLINK %llX\r\n", instance_get_addr());
+//			printf("TAG BLINK %llX\r\n", instance_get_addr());
+			printf("Normal Tag Ranging\r\n");
 		}
 	} else {
 		printf("AWAITING POLL\r\n");
@@ -398,6 +405,12 @@ void decawave_run(void) {
 
 	// main loop
 	while (1) {
+
+//		uint32_t elapsed = deca_millis() - time_start;
+//		if (elapsed > 1000) {
+//			print_status();
+//			time_start = deca_millis();
+//		}
 
 		instance_run();
 

@@ -129,7 +129,7 @@ int instance_init_f(int mode)
     dwt_setinterrupt(DWT_INT_TFRS | DWT_INT_RFCG | (DWT_INT_SFDT | DWT_INT_RFTO /*| DWT_INT_RXPTO*/), 1);
 
     //this is platform dependent - only program if DW EVK/EVB
-    dwt_setleds(3) ; //configure the GPIOs which control the LEDs on EVBs
+//    dwt_setleds(3) ; //configure the GPIOs which control the LEDs on EVBs
 
     dwt_setcallbacks(instance_txcallback, instance_rxcallback);
 

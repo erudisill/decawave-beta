@@ -110,10 +110,15 @@ void reset_DW1000(void) {
 	extint_chan_disable_callback(DW_RST_LINE, EXTINT_CALLBACK_TYPE_DETECT);
 
 	// Pull the pin low
-	config_port.input_pull = PORT_PIN_PULL_DOWN;
+//	config_port.input_pull = PORT_PIN_PULL_DOWN;
+//	port_pin_set_config(DW_RST_PIN, &config_port);
+	config_port.direction = PORT_PIN_DIR_OUTPUT;
+	config_port.input_pull = PORT_PIN_PULL_NONE;
+	port_pin_set_output_level(DW_RST_PIN, false);
 	port_pin_set_config(DW_RST_PIN, &config_port);
 
 	// Now release it
+	config_port.direction = PORT_PIN_DIR_INPUT;
 	config_port.input_pull = PORT_PIN_PULL_NONE;
 	port_pin_set_config(DW_RST_PIN, &config_port);
 
@@ -156,8 +161,8 @@ int writetospi_serial(uint16_t headerLength, const uint8_t *headerBuffer, uint32
 
 	if (result != STATUS_OK) {
 		printf("writetospi_serial timeout\r\n");
-		for (;;) {
-		}
+//		for (;;) {
+//		}
 	}
 
 	return result;
@@ -176,8 +181,8 @@ int readfromspi_serial(uint16_t headerLength, const uint8_t *headerBuffer, uint3
 
 	if (result != STATUS_OK) {
 		printf("readfromspi_serial timeout\r\n");
-		for (;;) {
-		}
+//		for (;;) {
+//		}
 	}
 
 	return result;

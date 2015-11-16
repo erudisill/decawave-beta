@@ -101,6 +101,7 @@
 									<listOptionValue builtIn="false" value="USART_CALLBACK_MODE=true"/>
 									<listOptionValue builtIn="false" value="SPI_CALLBACK_MODE=true"/>
 									<listOptionValue builtIn="false" value="__SAMD21E18A__"/>
+									<listOptionValue builtIn="false" value="_ASSERT_ENABLE_"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1325777254" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/ASF/common2/boards/user_board}&quot;"/>
