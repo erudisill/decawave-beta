@@ -424,6 +424,16 @@ int instance_init(void)
 	dwt_setpanid(instance_data[instance].panid);
 	// get eui64
     extern uint8_t eui64[];
+//	printf("mem: ");
+//	printf("%02X ", eui64[0]);
+//	printf("%02X ", eui64[1]);
+//	printf("%02X ", eui64[2]);
+//	printf("%02X ", eui64[3]);
+//	printf("%02X ", eui64[4]);
+//	printf("%02X ", eui64[5]);
+//	printf("%02X ", eui64[6]);
+//	printf("%02X ", eui64[7]);
+//	printf("\r\n");
 	dwt_seteui(eui64);
 	Sleep(1);
 	dwt_geteui(eui64);

@@ -10,17 +10,31 @@
 #define SOFTWARE_VER_STRING  "Version 0.01    "
 
 
-int is_tag = 0x01;
-uint8_t eui64[] = { 0x02, 0x00, 0x00, 0x00, 0x00, 0x02, 0xCA, 0xDE };
+//int is_tag = 0x01;
+//uint8_t eui64[] = { 0x73, 0x00, 0x00, 0x00, 0x00, 0x01, 0xCA, 0xDE };
+//int instance_anchaddr = 0; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 = 0xDECA020000000003
+
 
 //int is_tag = 0x00;
 //uint8_t eui64[] = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x02, 0xCA, 0xDE };
+//int instance_anchaddr = 0; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 = 0xDECA020000000003
+
+//int is_tag = 0x00;
+//uint8_t eui64[] = { 0x02, 0x00, 0x00, 0x00, 0x00, 0x02, 0xCA, 0xDE };
+//int instance_anchaddr = 1; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 = 0xDECA020000000003
+
+int is_tag = 0x00;
+uint8_t eui64[] = { 0x03, 0x00, 0x00, 0x00, 0x00, 0x02, 0xCA, 0xDE };
+int instance_anchaddr = 2; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 = 0xDECA020000000003
+
+
+
 
 int use_fast2wr = 0x00;
 int use_long_blink_delay = 0x00;
 int use_dr_mode = 0x02;  // Mode 3
 
-int instance_anchaddr = 0; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 = 0xDECA020000000003
+//int instance_anchaddr = 0; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 = 0xDECA020000000003
 int instance_mode = ANCHOR;
 //int instance_mode = TAG;
 //int instance_mode = TAG_TDOA;
@@ -131,12 +145,18 @@ uint64 tagAddressList[3] =
 };
 
 //Anchor address list
+//uint64 anchorAddressList[ANCHOR_LIST_SIZE] =
+//{
+//	0xDECA020000000001 ,       // First anchor
+//	0xDECA020000000002 ,// Second anchor
+//	0xDECA020000000003 ,// Third anchor
+//	0xDECA020000000004// Fourth anchor
+//};
 uint64 anchorAddressList[ANCHOR_LIST_SIZE] =
 {
-	0xDECA020000000001 ,       // First anchor
-	0xDECA020000000002 ,// Second anchor
-	0xDECA020000000003 ,// Third anchor
-	0xDECA020000000004// Fourth anchor
+	0xDECA020000000001,
+	0xDECA020000000002,
+	0xDECA020000000003
 };
 
 //ToF Report Forwarding Address
@@ -157,7 +177,8 @@ void addressconfigure(void)
 	ipc.anchorAddress = anchorAddressList[instance_anchaddr];
 	ipc.anchorAddressList = anchorAddressList;
 	ipc.anchorListSize = ANCHOR_LIST_SIZE;
-	ipc.anchorPollMask = 0x1; //0x7;              // anchor poll mask
+//	ipc.anchorPollMask = 0x1; //0x7;              // anchor poll mask
+	ipc.anchorPollMask = 0x7;
 
 	ipc.sendReport = 1;//1 => anchor sends TOF report to tag
 	//ipc.sendReport = 2 ;  //2 => anchor sends TOF report to listener
@@ -427,9 +448,9 @@ void decawave_run(void) {
 			printf("LAST: %4.2f m   ", range_result);
 #if (DR_DISCOVERY == 0)
 			if(instance_mode == ANCHOR)
-			printf("AVG8: %4.2f m", avg_result);
+			printf("AVG8: %4.2f m\r\n", avg_result);
 			else
-			printf("%llx", instance_get_anchaddr());
+			printf("%llx\r\n", instance_get_anchaddr());
 #else
 			printf("AVG8: %4.2f m\r\n", avg_result);
 #endif
